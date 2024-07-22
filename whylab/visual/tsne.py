@@ -6,7 +6,7 @@ import seaborn as sns
 
 # pip install scikit-learn
 
-def tsne(input_tensor, labels=None, save_file_path=None):
+def visual_tsne(input_tensor, labels=None, save_file_path=None):
     """Draw tsne visual of tensor
 
     Args:
