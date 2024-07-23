@@ -1,4 +1,5 @@
 import os
+import shutil
 
 def get_file_list(path, type=".xml"):
     file_names = []
@@ -9,3 +10,7 @@ def get_file_list(path, type=".xml"):
             if ext == type:
                 file_names.append(filename)
     return file_names
+
+
+def copy_file(src_path, target_path:str):
+    shutil.copyfile(src_path, target_path)
