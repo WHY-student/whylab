@@ -20,7 +20,8 @@ def is_posion_valid(width, height, position: np.ndarray) -> bool:
             (position[..., 1] >= 0).all()
     return flag
 
-def visual_box(image_numpy, bboxes, scores=None, labels=None, pred_score_thr=0.5, output_file_path=None, rescale=False):
+def visual_box(image_numpy, bboxes, scores=None, labels=None, pred_score_thr=0.5, output_file_path=None, rescale=False, 
+               color="red", font_size=10):
     """Draw single or multiple bboxes.
 
     Args:
@@ -75,6 +76,9 @@ def visual_box(image_numpy, bboxes, scores=None, labels=None, pred_score_thr=0.5
 
     if scores is None:
         scores = [100] * len(labels)
+    
+    if labels is None:
+        labels = ['target'] * len(scores)
 
     for bbox, score, label in zip(bboxes, scores, labels):
         if score < pred_score_thr:
@@ -89,15 +93,17 @@ def visual_box(image_numpy, bboxes, scores=None, labels=None, pred_score_thr=0.5
         )
         # Display score
         if score != 100:
-            ax.text(x0, y0-2, f'{score:.2f}', fontsize=10, color='red')
+            ax.text(x0, y0-2, f'{score:.2f}', fontsize=font_size, color=color)
         # Display label
-        ax.text(x0 + 10 , y0-2, f'{label}', fontsize=10, color='red')
+        ax.text(x0 + 30 , y0-2, f'{label}', fontsize=font_size, color=color)
 
 
     if output_file_path is None:
         plt.savefig("result.jpg", bbox_inches='tight', pad_inches=0)
     else:
         plt.savefig(output_file_path, bbox_inches='tight', pad_inches=0)
+    
+    plt.close()
 
 
         

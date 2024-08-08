@@ -13,5 +13,5 @@ def get_file_list(path, type=".xml"):
 
 
 def copy_file(src_path, target_path:str):
-    os.makedirs(target_path, exist_ok=True)
+    # os.makedirs(target_path, exist_ok=True)
     shutil.copyfile(src_path, target_path)
