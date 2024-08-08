@@ -1,3 +1,6 @@
 from .visual import *
-from .mmdet import *
+try:
+    from .mmdet import *
+except:
+    pass
 from .os import *
