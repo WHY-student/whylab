@@ -1,8 +1,10 @@
 import numpy as np
 import warnings
+import os
 
 import matplotlib.pyplot as plt
 from torch import  Tensor
+
 
 def is_posion_valid(width, height, position: np.ndarray) -> bool:
     """Judge whether the position is in image.
@@ -19,6 +21,49 @@ def is_posion_valid(width, height, position: np.ndarray) -> bool:
             (position[..., 1] < height).all() and \
             (position[..., 1] >= 0).all()
     return flag
+
+def visual_box_from_xml(xml_name, image, output_file_path=None):
+    import xml.etree.ElementTree as ET
+    tree = ET.parse(xml_name)
+    root = tree.getroot()
+    # file_name = os.path.splitext(xml_name)[0] + '.jpg'
+    width = int(root.find("size").find("width").text)
+    height = int(root.find("size").find("height").text)
+    if isinstance(image, str):
+        import cv2
+        img_numpy = cv2.imread(os.path.join(image))
+    else:
+        img_numpy = image
+
+    boxes = []
+    labels = []
+
+    # 匹配当前图片对pair_id的所有标注都属于这个文本对
+    for _object in root.findall("object"):
+        if _object.find("name")==None:
+            continue
+        category = _object.find("name").text
+        # category = "target"
+        labels.append(category)
+        try:
+            xmin = int(_object.find("bndbox").find("xmin").text)
+            ymin = int(_object.find("bndbox").find("ymin").text)
+            xmax = int(_object.find("bndbox").find("xmax").text)
+            ymax = int(_object.find("bndbox").find("ymax").text)
+        except:
+            print(1)
+        # w = xmax - xmin
+        # h = ymax - ymin
+        # if w < 0 or h < 0:
+        #     continue
+        # coco_box = [max(xmin, 0), max(ymin, 0), min(w, width), min(h, height)]
+        boxes.append([xmin, ymin, xmax, ymax])
+    boxes = np.array(boxes)
+    labels = np.array(labels)
+    visual_box(image_numpy=img_numpy, bboxes=boxes, labels=labels, 
+            output_file_path=output_file_path)
+
+
 
 def visual_box(image_numpy, bboxes, scores=None, labels=None, pred_score_thr=0.5, output_file_path=None, rescale=False, 
                color="red", font_size=10):
