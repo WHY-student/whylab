@@ -1,4 +1,4 @@
-from labelme import labelme2xml
+from .labelme import labelme2xml
 
 __all__ = [
     "labelme2xml"
